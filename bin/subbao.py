@@ -1,9 +1,36 @@
 #!/usr/bin/env python
-import sys, os
+import sys, os, os.path
 nproc=2
 priority="high"
-ini = sys.argv[1]
-outroot = sys.argv[2]
+typ = sys.argv[1]
+
+## type is delta/flux/data _ aln,xu
+ty1,ty2=typ.split('_')
+if (ty2=='xu'):
+    xu=True
+    xustr="Xu"
+elif (ty2=='aln'):
+    xu=False
+    xustr="Aln2"
+else:
+    print "bad type 2"
+    sys.exit(1)
+
+if (ty1=="delta"):
+    plateroot = 'delta_pk_'+xustr+'_d3d'
+elif (ty1=="flux"):
+    plateroot = 'flux_'+xustr+"_EM_d3d"
+elif (ty1=="data"):
+    plateroot = 'data_'+xustr+".SN"
+else:
+    print "bad type 1"
+    sys.exit(1)
+
+plateroot="data/"+plateroot
+
+ini = sys.argv[2]
+outroot = "outputs/"+(os.path.basename(ini)).replace('.ini','')
+
 if (len(sys.argv)>3):
     rlist=sys.argv[3]
     if '-' in rlist:
@@ -14,7 +41,9 @@ if (len(sys.argv)>3):
 else:
     rlist=[1]
 
-os.system('mkdir '+outroot)
+os.system('mkdir '+outrootdir)
+os.sysem ('cp '+ini+" "+outrootdir)
+
 for r in rlist:
     eo=""
     if r==17:
@@ -25,12 +54,24 @@ for r in rlist:
     else:
         r=str(r)
         eo="--reuse-cov=1"
-    croot=outroot+'/'+r
-    name = r+'.'+outroot
-    sysline = "OMP_NUM_THREADS=%i baofit -i %s --platelist=lr%s %s --output-prefix=%s. >%s.log 2>%s.err" %(nproc,ini,r,eo,croot,croot,croot)
-    exeline = 'nohup wq sub -r "N:%i; priority:%s; mode:bycore1; job_name:%s" -c "source ~/.bashrc; %s" & '%(nproc, priority,name,sysline)
-    print exeline
-    os.system(exeline)
+
+    croot=outrootdir+'/'+typ+'.'+r
+
+    if xu:
+        eo += " --xi-format=yes --xi-hexa=no"
+    else:
+        eo += " --minll=0.05 --maxll = 0.27 --dll=0.02 --dll2 = 0.002 --llmin=0.003"
+
+    name = os.path.basename(croot)
+    sysline = "OMP_NUM_THREADS=%i baofit -i %s --plateroot=%s "%(nproc,ini,plateroot)
+    sysline += "--platelist=lr%s %s --output-prefix=%s. >%s.log 2>%s.err" %(r,eo,croot,croot,croot)
+
+    astro='astro0034' in os.getenv('HOSTNAME')
+    ## Where are we?
+    if (astrobnl):
+        exeline = 'nohup wq sub -r "N:%i; priority:%s; mode:bycore1; job_name:%s" -c "source ~/.bashrc; %s" & '%(nproc, priority,name,sysline)
+        print exeline
+        #os.system(exeline)
     
     
 
