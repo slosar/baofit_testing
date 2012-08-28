@@ -26,7 +26,6 @@ else:
     print "bad type 1"
     sys.exit(1)
 
-plateroot="data/"+plateroot
 
 ini = sys.argv[2]
 outrootdir = "outputs/"+(os.path.basename(ini)).replace('.ini','')
@@ -41,11 +40,25 @@ if (len(sys.argv)>3):
 else:
     rlist=[1]
 
+
 os.system('mkdir '+outrootdir)
 os.system ('cp '+ini+" "+outrootdir)
 
 for r in rlist:
+    
+    #special meaning for data. "realization" is now data type
+    if (ty1=="data"):
+        if r==1:
+            plateroot="data_"+xustr+".SN"
+        elif r==2:
+            plateroot="data_"+xustr+".SN.3"
+        elif r==3:
+            plateroot="data_"+xusttr+".SN.nolint"
+
+    plateroot="data/"+plateroot
+            
     eo=""
+            
     if r==17:
         r="ALL"
         eo="--reuse-cov=1"
@@ -62,6 +75,9 @@ for r in rlist:
     else:
         pass
 
+            
+
+    
     name = os.path.basename(croot)
     sysline = "OMP_NUM_THREADS=%i baofit -i %s --plateroot=%s/ "%(nproc,ini,plateroot)
     sysline += "--platelist=lr%s %s --output-prefix=%s. >%s.log 2>%s.err" %(r,eo,croot,croot,croot)

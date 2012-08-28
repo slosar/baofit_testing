@@ -3,7 +3,7 @@
 from inimaker import *
 
 ## by default we are trying to detect vanilla
-vanilla=inimaker()
+vanilla=inimaker(bootstrap=10000, mcmc=10000)
 vanilla.write("bao_ampl")
 
 ## position detection, here we fix amplitude, and vary xibb.
@@ -28,7 +28,7 @@ zsc.update("model-config","value[alpha-scale]=0")
 zsc.write("zscale")
 
 ### anisotropic fit
-ani = inimaker()
+ani = inimaker(mcmc=10000)
 ani.update ("model-config","fix[BAO scale]=1.0; value[BAO scale a]=0.0; value[BAO scale b]=0.0")
 ani.write("ani")
 
