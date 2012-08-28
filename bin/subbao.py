@@ -53,7 +53,7 @@ for r in rlist:
         elif r==2:
             plateroot="data_"+xustr+".SN.3"
         elif r==3:
-            plateroot="data_"+xusttr+".SN.nolint"
+            plateroot="data_"+xustr+".SN.nolint"
 
     proot="data/"+plateroot
             
