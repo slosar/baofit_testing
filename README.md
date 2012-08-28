@@ -32,11 +32,10 @@ To start
 ---------
 
 <code>
-
-mkdir inis
-bin/makeinis.py 
-ln -s ~/work/kirkby/baofit/models models
-ln -s ../BOSS_3D/output data
-mkdir output
-bin/subbao.py flux_xu inis/bao_ampl.inii 18
+   mkdir inis
+   bin/makeinis.py 
+   ln -s ~/work/kirkby/baofit/models models
+   ln -s ../BOSS_3D/output data
+   mkdir output
+   bin/subbao.py flux_xu inis/bao_ampl.inii 18
 </code>
