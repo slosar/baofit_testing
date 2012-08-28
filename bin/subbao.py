@@ -29,7 +29,7 @@ else:
 plateroot="data/"+plateroot
 
 ini = sys.argv[2]
-outroot = "outputs/"+(os.path.basename(ini)).replace('.ini','')
+outrootdir = "outputs/"+(os.path.basename(ini)).replace('.ini','')
 
 if (len(sys.argv)>3):
     rlist=sys.argv[3]
@@ -42,7 +42,7 @@ else:
     rlist=[1]
 
 os.system('mkdir '+outrootdir)
-os.sysem ('cp '+ini+" "+outrootdir)
+os.system ('cp '+ini+" "+outrootdir)
 
 for r in rlist:
     eo=""
@@ -58,20 +58,20 @@ for r in rlist:
     croot=outrootdir+'/'+typ+'.'+r
 
     if xu:
-        eo += " --xi-format=yes --xi-hexa=no"
+        eo += " --xi-format --xi-hexa"
     else:
-        eo += " --minll=0.05 --maxll = 0.27 --dll=0.02 --dll2 = 0.002 --llmin=0.003"
+        pass
 
     name = os.path.basename(croot)
-    sysline = "OMP_NUM_THREADS=%i baofit -i %s --plateroot=%s "%(nproc,ini,plateroot)
+    sysline = "OMP_NUM_THREADS=%i baofit -i %s --plateroot=%s/ "%(nproc,ini,plateroot)
     sysline += "--platelist=lr%s %s --output-prefix=%s. >%s.log 2>%s.err" %(r,eo,croot,croot,croot)
 
-    astro='astro0034' in os.getenv('HOSTNAME')
+    astrobnl='astro0034' in os.getenv('HOSTNAME')
     ## Where are we?
     if (astrobnl):
         exeline = 'nohup wq sub -r "N:%i; priority:%s; mode:bycore1; job_name:%s" -c "source ~/.bashrc; %s" & '%(nproc, priority,name,sysline)
         print exeline
-        #os.system(exeline)
+        os.system(exeline)
     
     
 
