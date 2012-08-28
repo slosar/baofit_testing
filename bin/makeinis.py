@@ -29,6 +29,7 @@ zsc.write("zscale")
 
 ### anisotropic fit
 ani = inimaker(mcmc=10000)
-ani.update ("model-config","fix[BAO scale]=1.0; value[BAO scale a]=0.0; value[BAO scale b]=0.0")
+ani.update ("model-config","fix[BAO amplitude]=1.0; fix[BAO scale]=1.0; release[(1+beta)*bias]; release[BAO scale a]; release[BAO scale b];")
+ani.update ("anisotropic","true");
 ani.write("ani")
 

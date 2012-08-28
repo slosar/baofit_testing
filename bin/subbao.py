@@ -55,7 +55,7 @@ for r in rlist:
         elif r==3:
             plateroot="data_"+xusttr+".SN.nolint"
 
-    plateroot="data/"+plateroot
+    proot="data/"+plateroot
             
     eo=""
             
@@ -79,7 +79,7 @@ for r in rlist:
 
     
     name = os.path.basename(croot)
-    sysline = "OMP_NUM_THREADS=%i baofit -i %s --plateroot=%s/ "%(nproc,ini,plateroot)
+    sysline = "OMP_NUM_THREADS=%i baofit -i %s --plateroot=%s/ "%(nproc,ini,proot)
     sysline += "--platelist=lr%s %s --output-prefix=%s. >%s.log 2>%s.err" %(r,eo,croot,croot,croot)
 
     astrobnl='astro0034' in os.getenv('HOSTNAME')
