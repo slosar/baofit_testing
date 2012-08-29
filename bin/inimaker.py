@@ -5,7 +5,7 @@
 
 class inimaker:
 
-    def __init__ (self, bootstrap=None,mcmc=None):
+    def __init__ (self, bootstrap=10000,mcmc=10000):
         self.cont="""
 # Tabulated models to use
 modelroot = models/
@@ -13,13 +13,19 @@ fiducial =  DR9LyaMocks
 nowiggles = DR9LyaMocksSB
 broadband = DR9LyaMocksBBand
 
-model-config = fix[alpha-bias]=3.8; fix[alpha-beta]=0; fix[beta]=1.4; fix[(1+beta)*bias]=-0.336;
+model-config = value[alpha-bias]=3.8; gaussprior[alpha-bias]@(2.8,4.8)
+model-config = fix[alpha-beta]=0;
+model-config = value[beta]=1.4; gaussprior[beta]@(1.0,1.8)
+model-config = fix[(1+beta)*bias]=-0.336; 
+model-config = value[BAO scale]=1.0; boxprior[BAO scale]@(0.85,1.15)
 model-config = fix[BBand1*]; fix[BAO scale *]; fix[alpha-scale];
 
+#redshift dependence - this is constant
 nz = 3
 minz = 1.75
 dz = 0.5
 
+#separation for aln
 nsep = 18
 minsep = 0
 dsep = 10
@@ -31,9 +37,8 @@ maxll = 0.27 # cosmolib's xi3d_llend
 dll = 0.02   # cosmolib's xi3d_llstep
 dll2 = 0.002 # cosmolib's Delta_pix_3D (uses two_step if this is non-zero)
 
-
 rmin = 50
-rmax = 150
+rmax = 170
 
 """.split('\n')
         self.cont=[x+"\n" for x in self.cont]
