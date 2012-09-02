@@ -42,6 +42,8 @@ dll2 = 0.002 # cosmolib's Delta_pix_3D (uses two_step if this is non-zero)
 rmin = 50
 rmax = 170
 
+weighted=true
+
 """.split('\n')
         self.cont=[x+"\n" for x in self.cont]
         if (not bootstrap==None):

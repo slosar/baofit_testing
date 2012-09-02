@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 import sys, os, os.path
-nproc=2
-priority="high"
+import time
+nproc=1
+priority="block"
+group="gen45"
 typ = sys.argv[1]
 
 ## type is delta/flux/data _ aln,xu
@@ -28,7 +30,7 @@ else:
 
 
 ini = sys.argv[2]
-outrootdir = "outputs/"+(os.path.basename(ini)).replace('.ini','')
+outrootdir = "output/"+(os.path.basename(ini)).replace('.ini','')
 
 if (len(sys.argv)>3):
     rlist=sys.argv[3]
@@ -40,7 +42,11 @@ if (len(sys.argv)>3):
 else:
     rlist=[1]
 
-
+if (len(sys.argv)>4):
+    exetype=sys.argv[4]
+else:
+    exetype=None
+    
 os.system('mkdir '+outrootdir)
 os.system ('cp '+ini+" "+outrootdir)
 
@@ -82,12 +88,19 @@ for r in rlist:
     sysline = "OMP_NUM_THREADS=%i baofit -i %s --plateroot=%s/ "%(nproc,ini,proot)
     sysline += "--platelist=lr%s %s --output-prefix=%s. >%s.log 2>%s.err" %(r,eo,croot,croot,croot)
 
-    astrobnl='astro0034' in os.getenv('HOSTNAME')
+    if (exetype==None):
+        astrobnl='astro0034' in os.getenv('HOSTNAME')
     ## Where are we?
-    if (astrobnl):
-        exeline = 'nohup wq sub -r "N:%i; priority:%s; mode:bycore1; job_name:%s" -c "source ~/.bashrc; %s" & '%(nproc, priority,name,sysline)
-        print exeline
-        os.system(exeline)
-    
-    
+        if (astrobnl):
+            exeline = 'nohup wq sub -r "N:%i; group:%s; priority:%s; mode:bycore1; job_name:%s" -c "source ~/.bashrc; %s" & '%(nproc, group, priority,name,sysline)
+            print exeline
+            os.system(exeline)
+            time.sleep(0.4)
+    elif (exetype=="live"):
+        print "executing:", sysline
+        os.system(sysline)
+    else:
+        print "bad exetype"
+        print sysline
+        
 
