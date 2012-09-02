@@ -5,7 +5,7 @@
 
 class inimaker:
 
-    def __init__ (self, bootstrap=10000,mcmc=10000):
+    def __init__ (self, bootstrap=5000,mcmc=10000):
         self.cont="""
 # Tabulated models to use
 modelroot = models/
@@ -13,12 +13,14 @@ fiducial =  DR9LyaMocks
 nowiggles = DR9LyaMocksSB
 broadband = DR9LyaMocksBBand
 
-model-config = value[alpha-bias]=3.8; gaussprior[alpha-bias]@(2.8,4.8)
-model-config = fix[alpha-beta]=0;
+model-config = value[gamma-bias]=3.8; gaussprior[gamma-bias]@(2.8,4.8)
+model-config = fix[gamma-beta]=0;
 model-config = value[beta]=1.4; gaussprior[beta]@(1.0,1.8)
 model-config = fix[(1+beta)*bias]=-0.336; 
-model-config = value[BAO scale]=1.0; boxprior[BAO scale]@(0.85,1.15)
-model-config = fix[BBand1*]; fix[BAO scale *]; fix[alpha-scale];
+model-config = value[BAO alpha-iso]=1.0; boxprior[BAO alpha-iso]@(0.85,1.15)
+model-config = fix[BBand1*]; fix[BAO alpha-p*]; fix[gamma-scale];
+
+fix-aln-cov = true
 
 #redshift dependence - this is constant
 nz = 3
@@ -46,6 +48,7 @@ rmax = 170
             self.cont.append("bootstrap-trials = %i\n"%(bootstrap))
         if (not mcmc==None):
             self.cont.append("mcmc-save = %i\n"%(mcmc))
+            self.cont.append("mcmc-interval = 50\n")
 
 
     def update (self, field, value):
